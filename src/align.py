@@ -30,9 +30,9 @@ def get_edits(p: str, q: str) -> tuple[str, str, str]:
         else:
             cigar.append('D')
 
-    p.replace('-', '')
-    q.replace('-', '')
-    ''.join(cigar)
+    p = p.replace('-', '')
+    q = q.replace('-', '')
+    cigar = ''.join(cigar)
     
     return p, q, cigar
 
