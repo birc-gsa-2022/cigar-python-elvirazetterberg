@@ -17,6 +17,7 @@ def get_edits(p: str, q: str) -> tuple[str, str, str]:
     """
     assert len(p) == len(q)
 
+
     if p == '':
         return '', '', ''
     
@@ -63,9 +64,9 @@ def local_align(p: str, x: str, i: int, edits: str) -> tuple[str, str]:
             if edits[j] == 'M':
                 continue
             elif edits[j] == 'D':
-                xnew = '-'.join(xnew[:j], xnew[j:])
+                xnew = '-'.join([xnew[:j], xnew[j:]])
             else:
-                pnew = '-'.join(pnew[:j], pnew[j:])
+                pnew = '-'.join([pnew[:j], pnew[j:]])
 
         return pnew, xnew
 
@@ -95,9 +96,9 @@ def align(p: str, q: str, edits: str) -> tuple[str, str]:
             if edits[j] == 'M':
                 continue
             elif edits[j] == 'D':
-                qnew = '-'.join(qnew[:j], qnew[j:])
+                qnew = '-'.join([qnew[:j], qnew[j:]])
             else:
-                pnew = '-'.join(pnew[:j], pnew[j:])
+                pnew = '-'.join([pnew[:j], pnew[j:]])
 
         return pnew, qnew
 
