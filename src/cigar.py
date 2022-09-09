@@ -100,7 +100,7 @@ def edits_to_cigar(edits: str) -> str:
     temp = []
     cigar = []
     for i,l in enumerate(edits):
-        if l == edits[-1]:
+        if i == (len(edits)-1):
             temp.append(l)
             cigar.append(_summation(temp))
         else:
