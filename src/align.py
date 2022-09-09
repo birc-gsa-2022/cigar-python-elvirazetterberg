@@ -1,6 +1,9 @@
 """A module for translating between alignments and edits sequences."""
 
 
+from re import S
+
+
 def get_edits(p: str, q: str) -> tuple[str, str, str]:
     """Extract the edit operations from a pairwise alignment.
 
@@ -17,18 +20,17 @@ def get_edits(p: str, q: str) -> tuple[str, str, str]:
     """
     assert len(p) == len(q)
 
-
     if p == '':
         return '', '', ''
     
     cigar = []
     for i in range(len(p)):
-        if p[i] == q[i]:
-            cigar.append('M')
-        elif p[i] == '-':
+        if p[i] == '-':
             cigar.append('I')
-        else:
+        elif q[i] == '-':
             cigar.append('D')
+        else:
+            cigar.append('M')
 
     p = p.replace('-', '')
     q = q.replace('-', '')
@@ -52,6 +54,11 @@ def local_align(p: str, x: str, i: int, edits: str) -> tuple[str, str]:
     >>> local_align("ACCACAGTCATA", "GTACAGAGTACAAA", 2, "MDMMMMMMIMMMM")
     ('ACCACAGT-CATA', 'A-CAGAGTACAAA')
 
+local_align("accaaagta", "gtacaaatgtcca", 2, "MDMMIMMMMIIM"
+E         - ('acca-aagt--a', 'a-caaatgtcca')
+E         ?                    -
+E         + ('acca-aagt--a', 'acaaatgtcca')
+
     """
     if p == '' and x == '' and edits == '':
         return '', ''
@@ -60,7 +67,7 @@ def local_align(p: str, x: str, i: int, edits: str) -> tuple[str, str]:
     else:
         pnew = p
         xnew = x[i:]
-        for j in range(i, len(edits)):
+        for j in range(len(edits)):
             if edits[j] == 'M':
                 continue
             elif edits[j] == 'D':
