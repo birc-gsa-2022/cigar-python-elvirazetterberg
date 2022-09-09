@@ -20,7 +20,7 @@ def get_edits(p: str, q: str) -> tuple[str, str, str]:
     """
     assert len(p) == len(q)
 
-    if p == '':
+    if len(p) == 0:
         return '', '', ''
     
     cigar = []
@@ -54,13 +54,8 @@ def local_align(p: str, x: str, i: int, edits: str) -> tuple[str, str]:
     >>> local_align("ACCACAGTCATA", "GTACAGAGTACAAA", 2, "MDMMMMMMIMMMM")
     ('ACCACAGT-CATA', 'A-CAGAGTACAAA')
 
-local_align("accaaagta", "gtacaaatgtcca", 2, "MDMMIMMMMIIM"
-E         - ('acca-aagt--a', 'a-caaatgtcca')
-E         ?                    -
-E         + ('acca-aagt--a', 'acaaatgtcca')
-
     """
-    if p == '' and x == '' and edits == '':
+    if len(p) == 0 or len(x) == 0 or len(edits) == 0:
         return '', ''
     elif edits == len(edits)*'M':
         return p, x
@@ -92,7 +87,7 @@ def align(p: str, q: str, edits: str) -> tuple[str, str]:
     ('ACCACAGT-CATA', 'A-CAGAGTACAAA')
 
     """
-    if p == '' and q == '' and edits == '':
+    if len(p) == 0 or len(q) == 0 or len(edits) == 0:
         return '', ''
     elif edits == len(edits)*'M':
         return p, q
@@ -126,7 +121,7 @@ def edit_dist(p: str, x: str, i: int, edits: str) -> int:
     >>> edit_dist("accaaagta", "cgacaaatgtcca", 2, "MDMMIMMMMIIM")
     5
     """
-    if p == '' or x == '':
+    if len(p) == 0 or len(x) == 0:
         return 0
     
     pnew, xnew = local_align(p, x, i, edits)

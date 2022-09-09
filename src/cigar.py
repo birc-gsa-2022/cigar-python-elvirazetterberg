@@ -37,8 +37,19 @@ def cigar_to_edits(cigar: str) -> str:
     'MDMMMMMMIMMMM'
 
     """
-    # FIXME: construct the edits sequence
-    return ""
+    num = 0
+    edits = []
+    if len(cigar) == 0:
+        return ''
+
+    for i,fig in enumerate(cigar):
+        if i%2 == 0:
+            num = int(fig)
+            continue
+        else:
+            edits.append(fig*num)     
+
+    return edits
 
 
 def split_blocks(x: str) -> list[str]:
