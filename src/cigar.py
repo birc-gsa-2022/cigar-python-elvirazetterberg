@@ -47,9 +47,11 @@ def cigar_to_edits(cigar: str) -> str:
             num = int(fig)
             continue
         else:
-            edits.append(fig*num)     
+            edits.append(fig*num)  
 
-    return edits
+    final = ''.join(edits)   
+
+    return final
 
 
 def split_blocks(x: str) -> list[str]:

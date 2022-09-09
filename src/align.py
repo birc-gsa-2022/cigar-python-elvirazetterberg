@@ -55,7 +55,7 @@ def local_align(p: str, x: str, i: int, edits: str) -> tuple[str, str]:
     ('ACCACAGT-CATA', 'A-CAGAGTACAAA')
 
     """
-    if len(p) == 0 or len(x) == 0 or len(edits) == 0:
+    if len(p) == 0 and len(x) == 0 and len(edits) == 0:
         return '', ''
     elif edits == len(edits)*'M':
         return p, x
@@ -87,7 +87,7 @@ def align(p: str, q: str, edits: str) -> tuple[str, str]:
     ('ACCACAGT-CATA', 'A-CAGAGTACAAA')
 
     """
-    if len(p) == 0 or len(q) == 0 or len(edits) == 0:
+    if len(p) == 0 and len(q) == 0 and len(edits) == 0:
         return '', ''
     elif edits == len(edits)*'M':
         return p, q
