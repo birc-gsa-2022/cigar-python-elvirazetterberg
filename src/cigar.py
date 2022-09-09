@@ -84,5 +84,50 @@ def edits_to_cigar(edits: str) -> str:
     '1M1D6M1I4M'
 
     """
-    # FIXME: Compute the cigar
-    return ''
+
+    def _summation(cont_list):
+        if len(cont_list) == 0:
+            return ''
+        else:
+            return ''.join([str(len(cont_list)), cont_list[0]])
+
+    
+    if len(edits) == 0:
+        return ''
+
+    temp = []
+    cigar = []
+    for i,l in enumerate(edits):
+        if l == edits[-1]:
+            temp.append(l)
+            cigar.append(_summation(temp))
+        else:
+            if l == edits[i+1]:
+                temp.append(edits[i+1])
+            else:
+                temp.append(l)
+                cigar.append(_summation(temp))
+                temp = []
+
+    # cigar = []
+    # i = 0
+    # temp = edits[0]
+    # while True:
+    #     if i == len()
+    #     if temp == edits[-1]
+    #         cigar.append(''.join([temp, '1']))
+    #         break
+    #     i += 1
+    #     counter = 0
+    #     if temp != edits[i]:
+    #         cigar.append(''.join([temp, '1']))
+    #     elif temp == edits[i]:
+    #         while temp == edits[i]:
+    #             counter += 1
+    #             i += 1
+    #         cigar.append(''.join([temp, str(counter)]))
+    #     temp = edits[i]
+    
+    final = ''.join(cigar)
+    
+    return final
