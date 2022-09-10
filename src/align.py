@@ -1,6 +1,9 @@
 """A module for translating between alignments and edits sequences."""
 
 
+from re import S
+
+
 def get_edits(p: str, q: str) -> tuple[str, str, str]:
     """Extract the edit operations from a pairwise alignment.
 
@@ -16,8 +19,24 @@ def get_edits(p: str, q: str) -> tuple[str, str, str]:
 
     """
     assert len(p) == len(q)
-    # FIXME: do the actual calculations here
-    return '', '', ''
+
+    if len(p) == 0:
+        return '', '', ''
+    
+    cigar = []
+    for i in range(len(p)):
+        if p[i] == '-':
+            cigar.append('I')
+        elif q[i] == '-':
+            cigar.append('D')
+        else:
+            cigar.append('M')
+
+    p = p.replace('-', '')
+    q = q.replace('-', '')
+    cigar = ''.join(cigar)
+    
+    return p, q, cigar
 
 
 def local_align(p: str, x: str, i: int, edits: str) -> tuple[str, str]:
@@ -36,9 +55,22 @@ def local_align(p: str, x: str, i: int, edits: str) -> tuple[str, str]:
     ('ACCACAGT-CATA', 'A-CAGAGTACAAA')
 
     """
-    # FIXME: Compute the alignment rows
-    return '', ''
+    if len(p) == 0 and len(x) == 0 and len(edits) == 0:
+        return '', ''
+    elif edits == len(edits)*'M':
+        return p, x
+    else:
+        pnew = p
+        xnew = x[i:]
+        for j in range(len(edits)):
+            if edits[j] == 'M':
+                continue
+            elif edits[j] == 'D':
+                xnew = '-'.join([xnew[:j], xnew[j:]])
+            else:
+                pnew = '-'.join([pnew[:j], pnew[j:]])
 
+        return pnew, xnew
 
 def align(p: str, q: str, edits: str) -> tuple[str, str]:
     """Align two sequences from a sequence of edits.
@@ -55,8 +87,22 @@ def align(p: str, q: str, edits: str) -> tuple[str, str]:
     ('ACCACAGT-CATA', 'A-CAGAGTACAAA')
 
     """
-    # FIXME: Compute the alignment rows
-    return '', ''
+    if len(p) == 0 and len(q) == 0 and len(edits) == 0:
+        return '', ''
+    elif edits == len(edits)*'M':
+        return p, q
+    else:
+        pnew = p
+        qnew = q
+        for j in range(len(edits)):
+            if edits[j] == 'M':
+                continue
+            elif edits[j] == 'D':
+                qnew = '-'.join([qnew[:j], qnew[j:]])
+            else:
+                pnew = '-'.join([pnew[:j], pnew[j:]])
+
+        return pnew, qnew
 
 
 def edit_dist(p: str, x: str, i: int, edits: str) -> int:
@@ -75,5 +121,18 @@ def edit_dist(p: str, x: str, i: int, edits: str) -> int:
     >>> edit_dist("accaaagta", "cgacaaatgtcca", 2, "MDMMIMMMMIIM")
     5
     """
-    # FIXME: Compute the edit distance
-    return -1
+    if len(p) == 0 or len(x) == 0:
+        return 0
+    
+    pnew, xnew = local_align(p, x, i, edits)
+
+    counter = 0
+    for j in range(len(pnew)):
+        if pnew[j] == '-' or xnew[j] == '-':
+            counter += 1
+            continue
+        elif pnew[j] != xnew[j]:
+            counter += 1
+            continue
+
+    return counter
